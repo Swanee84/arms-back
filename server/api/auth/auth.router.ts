@@ -3,3 +3,4 @@ import authController from './auth.controller'
 
 export default express.Router()
     .post('/signIn', authController.signIn)
+    .get('/tokenRefresh', authController.tokenRefresh)
