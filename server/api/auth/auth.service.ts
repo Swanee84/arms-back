@@ -3,6 +3,7 @@ import { User } from '../../models/User';
 import { sequelize } from '../../common/sequelize';
 import { IResponse } from '../../models/IResponse';
 import { Constant } from '../../config/Constant';
+import { err } from 'pino-std-serializers';
 
 const userRepository = sequelize.getRepository(User);
 
@@ -16,14 +17,14 @@ export class AuthService {
     let message: string = ''
     let result: boolean = false
     if (user === null) {
-      message = 'Empty User'
+      message = '없는 사용자입니다.'
     } else {
       result = compareSync(password, user.password);
       if (result) {
-        message = 'Success'
+        message = '성공'
         user.password = null
       } else {
-        message = 'Invalid Password'
+        message = '비밀번호 틀림'
       }
     }
     const response: IResponse = {
@@ -42,12 +43,12 @@ export class AuthService {
     let message: string = ''
     let result: boolean = false
     if (user === null) {
-      message = 'Empty User'
+      message = '없는 사용자'
     } else if (user.status !== Constant.USER001) {
-      message = 'Drop User'
+      message = '탈퇴된 사용자'
     } else {
       result = true
-      message = 'Success'
+      message = '성공'
     }
     const response: IResponse = {
       result,
@@ -55,6 +56,14 @@ export class AuthService {
       model: result ? user : null
     }
     return response;
+  }
+
+  insertSignInLog(user: User, type: number): void {
+    try {
+      sequelize.query(`INSERT INTO SIGNIN_LOG (ACADEMY_ID, BRANCH_ID, USER_ID, TYPE, SIGNIN_DATE, SIGNIN_TIME) VALUES (null, null, ${user.userId}, ${type}), CURDATE(), CURTIME()`)
+    } catch(err) {
+      console.log(err)
+    }
   }
 
 }

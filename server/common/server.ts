@@ -4,6 +4,7 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import http from 'http';
 import os from 'os';
+import cors from 'cors';
 
 import errorHandler from '../api/middlewares/error.handler';
 
@@ -16,6 +17,7 @@ export default class ExpressServer {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(express.static(`${root}/public`));
+    app.use(cors());
   }
 
   router(routes: (app: Application) => void): ExpressServer {
