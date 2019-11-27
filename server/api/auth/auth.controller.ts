@@ -9,7 +9,7 @@ import { User } from '../../models/User';
 import { IResponse } from '../../models/IResponse';
 import { Constant } from '../../config/Constant';
 
-export class AuthController {
+class AuthController {
   async signIn(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body;
     if (!email) {
@@ -24,7 +24,15 @@ export class AuthController {
       const payload = { userId: user.userId, name: user.name, role: user.role, status: user.status }
       const token = jwt.sign(payload, environment.loginSecret);
       response.code = token
-      AuthService.insertSignInLog(user, 1)
+      let academyId: number = null
+      let branchId: number = null
+      await AuthService.getUserBranchList(user);
+      if (user.userBranchList.length == 1) {
+        const branch = user.userBranchList[0];
+        academyId = branch.academyId
+        branchId = branch.branchId
+      }
+      AuthService.insertSignInLog(user, 1, academyId, branchId)
     }
     return res.json(response)
   }
@@ -42,8 +50,17 @@ export class AuthController {
     const response: IResponse = await AuthService.signInByTokenEmail(decoded.userId);
     if (response.result) {
       const token = await jwt.sign(decoded, environment.loginSecret);
+      const user = <User> response.model;
       response.code = token
-      AuthService.insertSignInLog(decoded, 2)
+      let academyId: number = null
+      let branchId: number = null
+      await AuthService.getUserBranchList(user);
+      if (user.userBranchList.length == 1) {
+        const branch = user.userBranchList[0];
+        academyId = branch.academyId
+        branchId = branch.branchId
+      }
+      AuthService.insertSignInLog(user, 2, academyId, branchId)
     }
     return res.json(response)
   }

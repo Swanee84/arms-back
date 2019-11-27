@@ -2,7 +2,8 @@ import { BaseInterface } from './BaseInterface';
 
 export interface IResponse {
   result: boolean,
-  message: string,
+  message?: string,
   code?: string,
-  model?: BaseInterface
+  model?: BaseInterface,
+  jsonData?: any,
 }

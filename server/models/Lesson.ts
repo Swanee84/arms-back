@@ -1,6 +1,8 @@
-import { BelongsToMany, Column, Scopes, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import { ForeignKey, Column, BelongsTo, Table, HasMany, PrimaryKey } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
+import { Branch } from './Branch';
+import { User } from './User';
 
 @Table({ modelName: 'LESSON', underscored: true, freezeTableName: true })
 export class Lesson extends BaseModel<Lesson> implements BaseInterface {
@@ -8,6 +10,7 @@ export class Lesson extends BaseModel<Lesson> implements BaseInterface {
   @Column
   lessonId!: number; // 수업 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
 
@@ -26,6 +29,21 @@ export class Lesson extends BaseModel<Lesson> implements BaseInterface {
   @Column
   place?: string; // 장소
   
+  @BelongsTo(() => Branch)
+  branch: Branch;
+
+  @HasMany(() => User)
+  teacherList: User[];
+
+  @HasMany(() => LessonModifyRequest)
+  modifyRequestList: User[];
+
+  @HasMany(() => LessonRecord)
+  lessonRecordList: LessonRecord[];
+
+  @HasMany(() => LessonPicture)
+  lessonPictureList: LessonPicture[];
+
 }
 
 @Table({ modelName: 'LESSON_MODIFY_REQUEST', underscored: true, freezeTableName: true })
@@ -34,12 +52,15 @@ export class LessonModifyRequest extends BaseModel<Lesson> implements BaseInterf
   @Column
   lmrId!: number; // 수업 변경 요청 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
 
+  @ForeignKey(() => Lesson)
   @Column
   lessonId!: number; // 수업 계정
 
+  @ForeignKey(() => User)
   @Column
   userId!: number; // 사용자 계정
 
@@ -49,6 +70,15 @@ export class LessonModifyRequest extends BaseModel<Lesson> implements BaseInterf
   @Column
   type?: string; // 요청 종류 (취소, 변경 ...)
   
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Lesson)
+  lesson: Lesson;
+
+  @BelongsTo(() => Branch)
+  branch: Branch;
+
 }
 
 @Table({ modelName: 'LESSON_PICTURE', underscored: true, freezeTableName: true })
@@ -57,17 +87,29 @@ export class LessonPicture extends BaseModel<LessonPicture> implements BaseInter
   @Column
   lpId!: number; // 수업 그림 계정
 
+  @ForeignKey(() => Lesson)
   @Column
   lessonId!: number; // 수업 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
 
+  @ForeignKey(() => User)
   @Column
   userId!: number; // 사용자 계정
 
   @Column
   completion?: number; // 완성도
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Branch)
+  branch: Branch;
+
+  @BelongsTo(() => Lesson)
+  lesson: Lesson;
 
 }
 
@@ -77,17 +119,29 @@ export class LessonRecord extends BaseModel<LessonRecord> implements BaseInterfa
   @Column
   lhId!: number; // 수업 그림 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
 
+  @ForeignKey(() => Lesson)
   @Column
   lessonId!: number; // 수업 계정
 
+  @ForeignKey(() => User)
   @Column
   userId!: number; // 사용자 계정
 
   @Column
   lessonType?: string; // 수업 종류 (수채화, 아크릴, 유화, 펜드로잉...)
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Branch)
+  branch: Branch;
+
+  @BelongsTo(() => Lesson)
+  lesson: Lesson;
 
 }
 
@@ -97,6 +151,7 @@ export class LessonSchema extends BaseModel<LessonSchema> implements BaseInterfa
   @Column
   schemaId!: number; // 수업 스키마 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
 
@@ -109,6 +164,12 @@ export class LessonSchema extends BaseModel<LessonSchema> implements BaseInterfa
   @Column
   lessonEndTime?: Date; // 수업 종료 시간
 
+  @BelongsTo(() => Branch)
+  branch: Branch;
+
+  @HasMany(() => LessonSchemaTeacher)
+  lessonSchemaTeacherList: LessonSchemaTeacher[];
+
 }
 
 @Table({ modelName: 'LESSON_SCHEMA_TEACHER', underscored: true, freezeTableName: true })
@@ -117,11 +178,19 @@ export class LessonSchemaTeacher extends BaseModel<LessonSchemaTeacher> implemen
   @Column
   lstId!: number; // 지점 계정
 
+  @ForeignKey(() => LessonSchema)
   @Column
   schemaId!: number; // 수업 스키마 계정
 
+  @ForeignKey(() => User)
   @Column
   userId!: number; // 사용자 계정
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => LessonSchema)
+  lessonSchema: LessonSchema;
 
 }
 
@@ -131,13 +200,25 @@ export class LessonTeacher extends BaseModel<LessonTeacher> implements BaseInter
   @Column
   ltId!: number; // 수업 참여 선생님 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
 
+  @ForeignKey(() => Lesson)
   @Column
   lessonId!: number; // 수업 계정
 
+  @ForeignKey(() => User)
   @Column
   userId!: number; // 선생님 계정
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Branch)
+  branch: Branch;
+
+  @BelongsTo(() => Lesson)
+  lesson: Lesson;
 
 }

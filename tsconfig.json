@@ -7,9 +7,9 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "outDir": "dist",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "./server/common"],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
   },
   "include": ["typings.d.ts", "server/**/*.ts"],
   "exclude": ["node_modules"]

@@ -1,6 +1,8 @@
-import { BelongsToMany, Column, Scopes, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import { BelongsToMany, Column, ForeignKey, Table, DataType, PrimaryKey, BelongsTo } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
+import { Branch } from './Branch';
+import { User } from './User';
 
 @Table({ modelName: 'COURSE', underscored: true, freezeTableName: true })
 export class Course extends BaseModel<Course> implements BaseInterface {
@@ -8,9 +10,11 @@ export class Course extends BaseModel<Course> implements BaseInterface {
   @Column
   courseId!: number; // 지점 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
   
+  @ForeignKey(() => User)
   @Column
   userId!: number; // 수강생 사용자 계정
 
@@ -43,12 +47,15 @@ export class CourseHoldingHistory extends BaseModel<Course> implements BaseInter
   @Column
   chhId!: number; // 수강 홀딩 계정
 
+  @ForeignKey(() => Course)
   @Column
   courseId!: number; // 수강 계정
 
+  @ForeignKey(() => User)
   @Column
   userId!: number; // 수강생 사용자 계정
 
+  @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
   
@@ -58,4 +65,13 @@ export class CourseHoldingHistory extends BaseModel<Course> implements BaseInter
   @Column
   endDate!: Date; // 홀딩 종료 일
 
+  @BelongsTo(() => Course)
+  course: Course
+
+  @BelongsTo(() => User)
+  user: User
+  
+  @BelongsTo(() => Branch)
+  branch: Branch
+  
 }

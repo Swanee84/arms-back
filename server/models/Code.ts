@@ -1,6 +1,7 @@
-import { BelongsToMany, Column, Scopes, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import { ForeignKey, Column, Scopes, Table, DataType, PrimaryKey } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
+import { Academy } from './Academy';
 
 @Table({ modelName: 'CD_GRP', underscored: true, freezeTableName: true })
 export class CdGrp extends BaseModel<CdGrp> implements BaseInterface {
@@ -25,6 +26,7 @@ export class CdDtl extends BaseModel<CdDtl> implements BaseInterface {
   @Column
   dtlId!: number; // 상세 코드 계정
 
+  @ForeignKey(() => Academy)
   @Column
   academyId!: number; // 학원 계정
 
