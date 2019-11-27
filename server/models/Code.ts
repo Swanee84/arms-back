@@ -1,4 +1,4 @@
-import { ForeignKey, Column, Scopes, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import { ForeignKey, Column, HasMany, Table, DataType, PrimaryKey } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Academy } from './Academy';
@@ -16,8 +16,13 @@ export class CdGrp extends BaseModel<CdGrp> implements BaseInterface {
   grpCd!: string; // 그룹 코드
   
   @Column
-  grpCdNm!: string; // 그룹 코드 이름
+  grpCdName!: string; // 그룹 코드 이름
   
+  @HasMany(() => CdDtl, 'grpCd')
+  cdDtlList: CdDtl[];
+  
+  @Column
+  dtlCount: number;
 }
 
 @Table({ modelName: 'CD_DTL', underscored: true, freezeTableName: true })
@@ -26,10 +31,14 @@ export class CdDtl extends BaseModel<CdDtl> implements BaseInterface {
   @Column
   dtlId!: number; // 상세 코드 계정
 
-  @ForeignKey(() => Academy)
   @Column
   academyId!: number; // 학원 계정
 
+  // @ForeignKey(() => CdGrp)
+  // @Column
+  // grpId!: number; // 그룹 코드 계정
+
+  @ForeignKey(() => CdGrp)
   @Column
   grpCd!: string; // 그룹 코드
   
@@ -37,7 +46,7 @@ export class CdDtl extends BaseModel<CdDtl> implements BaseInterface {
   dtlCd!: string; // 상세 코드
   
   @Column
-  dtlCdNm!: string; // 상세 코드 이름
+  dtlCdName!: string; // 상세 코드 이름
   
   @Column
   val1!: string; // 값1

@@ -1,10 +1,8 @@
-import { User, UserBranch } from '../../models/User';
-import { sequelize } from '../../common/sequelize';
-import { Op } from 'sequelize';
 import { IResponse } from '../../models/IResponse';
 import { Constant, RoleConst } from '../../config/Constant';
 import { Academy } from '../../models/Academy';
 import { Branch } from '../../models/Branch';
+import { User, UserBranch } from '../../models/User';
 import { Course, CourseHoldingHistory } from '../../models/Course';
 import { LessonRecord, Lesson, LessonTeacher } from '../../models/Lesson';
 
@@ -112,8 +110,12 @@ class UserService {
     return response;
   }
 
-  async delUser(user: User): Promise<IResponse> {
-    return null;
+  async delUser(userId: number): Promise<IResponse> {
+    await User.destroy({ where: { userId }})
+    const response: IResponse = {
+      result: true,
+    }
+    return response;
   }
 }
 

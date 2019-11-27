@@ -1,0 +1,27 @@
+import express from 'express';
+import codeController from './code.controller'
+import jwtauth from '../../common/jwtauth'
+
+export default express.Router()
+  .post('/selGroupCodeList', jwtauth)
+  .post('/selGroupCodeList', codeController.selGroupCodeList)
+  .post('/insGroupCode', jwtauth)
+  .post('/insGroupCode', codeController.insGroupCode)
+  .post('/updGroupCode', jwtauth)
+  .post('/updGroupCode', codeController.updGroupCode)
+  .post('/delGroupCode', jwtauth)
+  .post('/delGroupCode', codeController.delGroupCode)
+  .post('/selDetailCodeList', jwtauth)
+  .post('/selDetailCodeList', codeController.selDetailCodeList)
+  .post('/insDetailCode', jwtauth)
+  .post('/insDetailCode', codeController.insDetailCode)
+  .post('/updDetailCode', jwtauth)
+  .post('/updDetailCode', codeController.updDetailCode)
+  .post('/delDetailCode', jwtauth)
+  .post('/delDetailCode', codeController.delDetailCode)
+  .post('/updCodeOrdering', jwtauth)
+  .post('/updCodeOrdering', codeController.updCodeOrdering)
+  .post('/selAllDetailCodeList', jwtauth)
+  .post('/selAllDetailCodeList', codeController.selAllDetailCodeList)
+  .post('/selGroupCodeInDetailCodeList', jwtauth)
+  .post('/selGroupCodeInDetailCodeList', codeController.selGroupCodeInDetailCodeList)
