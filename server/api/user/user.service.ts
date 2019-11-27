@@ -5,6 +5,8 @@ import { IResponse } from '../../models/IResponse';
 import { Constant, RoleConst } from '../../config/Constant';
 import { Academy } from '../../models/Academy';
 import { Branch } from '../../models/Branch';
+import { Course, CourseHoldingHistory } from '../../models/Course';
+import { LessonRecord, Lesson, LessonTeacher } from '../../models/Lesson';
 
 class UserService {
   async selUserList(academyId: number, branchId?: number, role?: string): Promise<IResponse> {
@@ -12,21 +14,11 @@ class UserService {
     if (branchId) {
       whereObj.branchId = branchId;
     }
-    // const userList = await User.findAll({
-    //   attributes: ['userId', 'email', 'name', 'phoneNo', 'birthday', 'role', 'regDt'],
-    //   include: [{
-    //     attributes: ['academyId', 'branchId'],
-    //     model: UserBranch,
-    //     where: whereObj,
-    //     required: true,
-    //   }]
-    // })
-
     const userList = await UserBranch.findAll({
       attributes: [],
       where: whereObj,
       include: [{
-        attributes: ['userId', 'email', 'name', 'phoneNo', 'birthday', 'role', 'regDt'],
+        attributes: ['userId', 'email', 'name', 'phoneNo', 'birthday', 'role', 'status', 'regDt'],
         model: User,
         required: true,
       }, {
@@ -49,11 +41,75 @@ class UserService {
   }
 
   async selUserDetail(userId: number): Promise<IResponse> {
-    return null;
+    const user = await User.findOne({
+      attributes: ['userId', 'email', 'name', 'phoneNo', 'birthday', 'role', 'status', 'regDt', 'modDt'],
+      where: { userId: userId },
+    });
+    const role = user.role;
+    if (role === RoleConst.STUDENT) { // 수강생이면
+      const courseList = await Course.findAll({
+        attributes: ['startDate', 'endDate', 'courseAmount', 'courseType', 'discountAmount', 'maxHoldingCount', 'useHoldingCount', 'status', 'regDt', 'modDt'],
+        where: { userId: userId },
+        include: [{
+          attributes: ['startDate', 'endDate', 'status', 'regDt', 'modDt'],
+          model: CourseHoldingHistory,
+          required: true,
+          where: { userId: userId },
+        }]
+      })
+      user.courseList = courseList;
+      user.setDataValue('courseList', courseList);
+
+      const lessonRecordList = await LessonRecord.findAll({
+        attributes: ['lessonId', 'lessonType', 'status'],
+        where: { userId: userId },
+        include: [{
+          attributes: ['lessonDate', 'lessonStartTime', 'lessonEndTime', 'place', 'status', 'regDt', 'modDt'],
+          model: Lesson,
+          required: true,
+        }]
+      })
+      user.lessonRecordList = lessonRecordList;
+      user.setDataValue('lessonRecordList', lessonRecordList);
+    } else if (role === RoleConst.TEACHER || role === RoleConst.BRANCH || role === RoleConst.ACADEMY) { // 선생님이면
+      const lessonTeacherList = await LessonTeacher.findAll({
+        attributes: ['lessonId', 'branchId', 'status'],
+        where: { userId: userId },
+        include: [{
+          attributes: ['lessonDate', 'lessonStartTime', 'lessonEndTime', 'place', 'status', 'regDt', 'modDt'],
+          model: Lesson,
+          required: true,
+        }]
+      })
+      user.lessonTeacherList = lessonTeacherList;
+      user.setDataValue('lessonTeacherList', lessonTeacherList);
+    }
+    const response: IResponse = {
+      result: user !== null,
+      model: user,
+    }
+    return response;
+  }
+
+  async insUser(user: User): Promise<IResponse> {
+    const newUser = await User.create(user).catch(error => {
+        console.log("insertUser: \n" + error)
+    })
+    const response: IResponse = {
+      result: newUser !== null,
+      jsonData: newUser,
+    }
+    return response;
   }
 
   async updUser(user: User): Promise<IResponse> {
-    return null;
+    await User.update(user, { where: { userId: user.userId }}).catch(error => {
+        console.log("insertUser: \n" + error)
+    })
+    const response: IResponse = {
+      result: true,
+    }
+    return response;
   }
 
   async delUser(user: User): Promise<IResponse> {

@@ -3,6 +3,8 @@ import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Academy } from './Academy';
 import { Branch } from './Branch';
+import { Course, CourseHoldingHistory } from './Course';
+import { LessonRecord, LessonTeacher } from './Lesson';
 
 @Table({ modelName: 'USER', underscored: true, freezeTableName: true })
 export class User extends BaseModel<User> implements BaseInterface {
@@ -30,6 +32,11 @@ export class User extends BaseModel<User> implements BaseInterface {
 
   @HasMany(() => UserBranch)
   userBranchList: UserBranch[];
+
+  courseList: Course[];
+
+  lessonRecordList: LessonRecord[];
+  lessonTeacherList: LessonTeacher[];
 }
 
 @Table({ modelName: 'USER_BRANCH', underscored: true, freezeTableName: true })

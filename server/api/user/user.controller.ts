@@ -1,3 +1,4 @@
+import { hashSync } from 'bcryptjs'
 import UserService from './user.service';
 import { Request, Response } from 'express';
 import { User } from '../../models/User';
@@ -19,10 +20,12 @@ class UserController {
   }
 
   async selTeacherList(req: Request, res: Response): Promise<Response> {
-    const academyId = req.body.academyId;
-    const branchId = req.body.branchId;
+    const { academyId, branchId } = req.body;
     const user: User = req.decodedUser;
-    if (!branchId && (user.role != RoleConst.ACADEMY || user.role != RoleConst.ADMIN)) {
+    if (!academyId) {
+      return res.json({ result: false, status: 400, code: 'academyId', message: 'Empty Parameter' });
+    }
+    if (!branchId && user.role != RoleConst.ACADEMY && user.role != RoleConst.ADMIN) {
       return res.json({ result: false, status: 403, code: 'role', message: '전체 조회 권한 없음' });
     }
     const response: IResponse = await UserService.selUserList(academyId, branchId, 'TEACHER');
@@ -30,15 +33,48 @@ class UserController {
   }
 
   async selUserDetail(req: Request, res: Response): Promise<Response> {
-    return res.json();
+    const userId = req.body.userId;
+    if (!userId) {
+      return res.json({ result: false, status: 400, code: 'userId', message: 'Empty Parameter' });
+    }
+    const response: IResponse = await UserService.selUserDetail(userId);
+    return res.json(response);
+  }
+
+  async insUser(req: Request, res: Response): Promise<Response> {
+    const user: User = req.body.user;
+    let password = user.password;
+    if (!password) {
+      return res.json({ result: false, status: 400, code: 'password', message: 'Empty Parameter' });
+    } else {
+      user.password = hashSync(password, 8);
+    }
+    const response: IResponse = await UserService.insUser(user);
+    return res.json(response);
   }
 
   async updUser(req: Request, res: Response): Promise<Response> {
-    return res.json();
+    const user: User = req.body.user;
+    const userId = user.userId;
+    if (!userId) {
+      return res.json({ result: false, status: 400, code: 'userId', message: 'Empty Parameter' });
+    }
+    if (user.password) {
+      user.password = hashSync(user.password, 8);
+    }
+    const response: IResponse = await UserService.updUser(user);
+    return res.json(response);
   }
 
   async delUser(req: Request, res: Response): Promise<Response> {
-    return res.json();
+    const user: User = req.body.user;
+    const userId = user.userId;
+    if (!userId) {
+      return res.json({ result: false, status: 400, code: 'userId', message: 'Empty Parameter' });
+    }
+    user.status = 'USER003';
+    const response: IResponse = await UserService.updUser(user);
+    return res.json(response);
   }
 
 }

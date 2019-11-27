@@ -32,12 +32,6 @@ export class Lesson extends BaseModel<Lesson> implements BaseInterface {
   @BelongsTo(() => Branch)
   branch: Branch;
 
-  @HasMany(() => User)
-  teacherList: User[];
-
-  @HasMany(() => LessonModifyRequest)
-  modifyRequestList: User[];
-
   @HasMany(() => LessonRecord)
   lessonRecordList: LessonRecord[];
 

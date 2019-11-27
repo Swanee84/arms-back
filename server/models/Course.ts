@@ -1,4 +1,4 @@
-import { BelongsToMany, Column, ForeignKey, Table, DataType, PrimaryKey, BelongsTo } from 'sequelize-typescript';
+import { HasMany, Column, ForeignKey, Table, DataType, PrimaryKey, BelongsTo } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Branch } from './Branch';
@@ -38,6 +38,9 @@ export class Course extends BaseModel<Course> implements BaseInterface {
 
   @Column
   useHoldingCount?: number; // 사용 홀딩 횟수
+
+  @HasMany(() => CourseHoldingHistory)
+  courseHoldingHistoryList: CourseHoldingHistory[];
 
 }
 
