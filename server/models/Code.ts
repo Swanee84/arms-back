@@ -34,9 +34,9 @@ export class CdDtl extends BaseModel<CdDtl> implements BaseInterface {
   @Column
   academyId!: number; // 학원 계정
 
-  // @ForeignKey(() => CdGrp)
-  // @Column
-  // grpId!: number; // 그룹 코드 계정
+  @ForeignKey(() => CdGrp)
+  @Column
+  grpId!: number; // 그룹 코드 계정
 
   @ForeignKey(() => CdGrp)
   @Column

@@ -1,7 +1,17 @@
+import { IResponse } from '../models/IResponse';
 export class Constant {
-  public static readonly USER_NORMAL: string = 'USER001';
-  public static readonly USER_DELETE: string = 'USER002';
+  public static readonly USER_NORMAL: string = 'USER_001';
+  public static readonly USER_DELETE: string = 'USER_002';
+  public static readonly CODE_NORMAL: string = 'CODE_001';
+  public static readonly CODE_DELETE: string = 'CODE_002';
+
   public static readonly HEADER_KEY: string = 'authorization';
+
+  public static returnDbErrorResponse(error: any): IResponse {
+    console.log("<--Sequelize: [Run SQL Error]-->\n" + error)
+    const response: IResponse = { result: false, message: 'SQL Error', jsonData: error }
+    return response;
+  }
 }
 
 export class RoleConst {
