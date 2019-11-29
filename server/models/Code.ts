@@ -18,7 +18,7 @@ export class CdGrp extends BaseModel<CdGrp> implements BaseInterface {
   @Column
   grpCdName!: string; // 그룹 코드 이름
   
-  @HasMany(() => CdDtl, 'grpCd')
+  @HasMany(() => CdDtl)
   cdDtlList: CdDtl[];
   
   @Column

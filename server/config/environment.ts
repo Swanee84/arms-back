@@ -5,7 +5,7 @@ const environments = {
       username: 'shpark',
       password: 'park1908',
       database: 'ARMS',
-      address: 'swaneeriver.iptime.org'
+      address: 'localhost'
     },
     loginSecret: 'ARMS_Login_dev',
   },
@@ -15,7 +15,7 @@ const environments = {
       username: 'shpark',
       password: 'park1908',
       database: 'ARMS',
-      address: 'swaneeriver.iptime.org'
+      address: 'ARMS_Login_dev'
     },
     loginSecret: 'ARMS_Login',
   }

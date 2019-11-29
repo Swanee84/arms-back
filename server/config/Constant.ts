@@ -1,4 +1,4 @@
-import { IResponse } from '../models/IResponse';
+
 export class Constant {
   public static readonly USER_NORMAL: string = 'USER_001';
   public static readonly USER_DELETE: string = 'USER_002';
@@ -7,10 +7,10 @@ export class Constant {
 
   public static readonly HEADER_KEY: string = 'authorization';
 
-  public static returnDbErrorResponse(error: any): IResponse {
+  public static returnDbErrorResponse(error: any): any {
     console.log("<--Sequelize: [Run SQL Error]-->\n" + error)
-    const response: IResponse = { result: false, message: 'SQL Error', jsonData: error }
-    return response;
+    // const response: IResponse = { result: false, message: 'SQL Error', jsonData: error }
+    return null;
   }
 }
 

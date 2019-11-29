@@ -14,7 +14,6 @@ export const sequelize = new Sequelize(
   {
     dialect: 'mariadb',
     host: environment.mariadb.address, // 데이터베이스 호스트
-    port: 3307,
     models: [Academy, Branch, User, UserBranch, Course, CourseHoldingHistory, Lesson, LessonModifyRequest, LessonPicture, LessonRecord, LessonSchema, LessonSchemaTeacher, LessonTeacher, CdGrp, CdDtl],
     // repositoryMode: true,
     define: {

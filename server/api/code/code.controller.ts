@@ -25,7 +25,9 @@ class UserController {
     }
     const user: User = req.decodedUser;
     cdGrp.regId = user.userId;
-    cdGrp.status = Constant.CODE_NORMAL;
+    if (!cdGrp.status) {
+      cdGrp.status = Constant.CODE_NORMAL;
+    }
 
     const response: IResponse = await CodeService.insGroupCode(cdGrp);
     return res.json(response);
@@ -77,7 +79,9 @@ class UserController {
     }
     const user: User = req.decodedUser;
     cdDtl.regId = user.userId;
-    cdDtl.status = Constant.CODE_NORMAL;
+    if (!cdDtl.status) {
+      cdDtl.status = Constant.CODE_NORMAL;
+    }
 
     const response: IResponse = await CodeService.insDetailCode(cdDtl);
     return res.json(response);
@@ -131,9 +135,10 @@ class UserController {
       return res.json({ result: false, status: 400, code: 'academyId', message: 'Empty Parameter' });
     }
     const grpCdList = req.body.grpCdList;
-    if (!grpCdList) {
-      return res.json({ result: false, status: 400, code: 'grpCdList', message: 'Empty Parameter' });
-    }
+    // 전체 검색이 있을수도 있으므로 grpCdList 는 체크하지 않는다.
+    // if (!grpCdList) {
+    //   return res.json({ result: false, status: 400, code: 'grpCdList', message: 'Empty Parameter' });
+    // }
     const response: IResponse = await CodeService.selGroupCodeInDetailCodeList(academyId, grpCdList);
     return res.json(response);
   }

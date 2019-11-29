@@ -11,10 +11,11 @@ const userRepository = sequelize.getRepository(User);
 
 class AuthService {
   async signInByEmail(email: string, password: string): Promise<IResponse> {
-    const user = await userRepository.findOne({
+    const user: User = await userRepository.findOne({
       attributes: ['userId', 'email', 'password', 'name', 'phoneNo', 'birthday', 'role', 'status'],
       where: { email, status: Constant.USER_NORMAL },
-    });
+    }).catch(Constant.returnDbErrorResponse);
+
     let message: string = ''
     let result: boolean = false
     if (user === null) {
@@ -28,20 +29,7 @@ class AuthService {
         message = '비밀번호 틀림'
       }
     }
-    let menuArray = [];
-    const userRole = user.role;
-    if (userRole === RoleConst.ADMIN) {
-      menuArray = menuArray.concat(MenuInfo.branchDirector);
-      menuArray = menuArray.concat(MenuInfo.commonDriector);
-      menuArray = menuArray.concat(MenuInfo.academyDirector);
-    } else if (userRole === RoleConst.BRANCH) {
-      menuArray = menuArray.concat(MenuInfo.branchDirector);
-      menuArray = menuArray.concat(MenuInfo.commonDriector);
-    } else if (userRole === RoleConst.TEACHER) {
-      menuArray = menuArray.concat(MenuInfo.teacher);
-    } else if (userRole === RoleConst.STUDENT) {
-      menuArray = menuArray.concat(MenuInfo.student);
-    }
+    const menuArray = MenuInfo.getMenuArray(user.role);
 
     const response: IResponse = {
       result,
@@ -73,10 +61,11 @@ class AuthService {
   }
 
   async signInByTokenEmail(userId: string): Promise<IResponse> {
-    const user = await userRepository.findOne({
+    const user: User = await userRepository.findOne({
       attributes: ['userId', 'email', 'name', 'phoneNo', 'birthday', 'role', 'status'],
       where: { userId }
-    });
+    }).catch(Constant.returnDbErrorResponse);
+
     let message: string = ''
     let result: boolean = false
     if (user === null) {
@@ -87,10 +76,13 @@ class AuthService {
       result = true
       message = '성공'
     }
+    const menuArray = MenuInfo.getMenuArray(user.role);
+
     const response: IResponse = {
       result,
       message,
-      model: result ? user : null
+      model: result ? user : null,
+      jsonData: menuArray
     }
     return response;
   }
@@ -109,16 +101,19 @@ export default new AuthService();
 
 
 class MenuInfo {
-  public static readonly branchDirector = [
+  static readonly branchDirector = [
     { icon: 'phone_callback', text: '지점 관리', toRoute: '/branch' },
   ]
   
-  public static readonly academyDirector = [
+  static readonly academyDirector = [
     { icon: 'phone_callback', text: '학원 관리', toRoute: '/academy' },
+  ]
+
+  static readonly adminDirector = [
     { icon: 'phone_callback', text: '코드 관리', toRoute: '/code' },
   ]
 
-  public static readonly commonDriector = [
+  static readonly commonDriector = [
     {
       icon: 'assignment_turned_in',
       'icon-alt': 'assignment_turned_in',
@@ -143,15 +138,35 @@ class MenuInfo {
     },
   ]
 
-  public static readonly teacher = [
+  static readonly teacher = [
     { icon: 'phone_callback', text: '지난 수업 이력', toRoute: '/lesson_history' },
     { icon: 'phone_callback', text: '수업 조회', toRoute: '/lesson_teacher' },
     { icon: 'phone_callback', text: '내 정보 관리', toRoute: '/myinfo' },
   ]
 
-  public static readonly student = [
+  static readonly student = [
     { icon: 'phone_callback', text: '지난 수업 이력', toRoute: '/lesson_history' },
     { icon: 'phone_callback', text: '수업 조회', toRoute: '/lesson' },
     { icon: 'phone_callback', text: '내 정보 관리', toRoute: '/myinfo' },
   ]
+
+  public static getMenuArray(userRole: string): any {
+    let menuArray = [];
+    if (userRole === RoleConst.ADMIN || userRole === RoleConst.ACADEMY) {
+      menuArray = menuArray.concat(MenuInfo.branchDirector);
+      menuArray = menuArray.concat(MenuInfo.commonDriector);
+      menuArray = menuArray.concat(MenuInfo.academyDirector);
+      if (userRole === RoleConst.ADMIN) {
+        menuArray = menuArray.concat(MenuInfo.adminDirector);
+      }
+    } else if (userRole === RoleConst.BRANCH) {
+      menuArray = menuArray.concat(MenuInfo.branchDirector);
+      menuArray = menuArray.concat(MenuInfo.commonDriector);
+    } else if (userRole === RoleConst.TEACHER) {
+      menuArray = menuArray.concat(MenuInfo.teacher);
+    } else if (userRole === RoleConst.STUDENT) {
+      menuArray = menuArray.concat(MenuInfo.student);
+    }
+    return menuArray
+  }
 }

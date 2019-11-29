@@ -1,7 +1,6 @@
 import { IResponse } from '../../models/IResponse';
 import { CdGrp, CdDtl } from '../../models/Code';
 import { Sequelize } from 'sequelize-typescript';
-import { Op } from 'sequelize';
 import { Constant } from '../../config/Constant';
 
 class CodeService {
@@ -52,8 +51,8 @@ class CodeService {
     if (grpId) {
       whereObj.grpId = grpId;
     }
-    const dtlCdList = await CdGrp.findAll({
-      attributes: ['GRP_CD', 'DTL_CD', 'DTL_CD_NAME', 'VAL1', 'VAL2', 'VAL3', 'DTL_ORDER', 'STATUS'],
+    const dtlCdList = await CdDtl.findAll({
+      attributes: ['dtlId', 'grpId', 'grpCd', 'dtlCd', 'dtlCdName', 'val1', 'val2', 'val3', 'dtlOrder', 'status'],
       where: whereObj,
     }).catch(Constant.returnDbErrorResponse);
     const response: IResponse = {
@@ -66,8 +65,12 @@ class CodeService {
   async insDetailCode(dtlCode: CdDtl): Promise<IResponse> {
     const duplicateCount = await CdDtl.count({ where: { grpId: dtlCode.grpId, dtlCd: dtlCode.dtlCd }}).catch(Constant.returnDbErrorResponse);
     if (duplicateCount === 0) {
-      const result = await CdGrp.create(dtlCode).catch(Constant.returnDbErrorResponse);
-      console.log('create result==> ', result);
+      const nextDtlOrder: number = await CdDtl.max('dtlOrder', { where: { grpId: dtlCode.grpId } }) || 0
+      dtlCode.dtlOrder = nextDtlOrder + 1;
+      const result = await CdDtl.create(dtlCode).catch(Constant.returnDbErrorResponse);
+      if (!result) {
+        return { result: false };
+      }
     } else {
       return { result: false, message: 'Duplicate Detail Code'};
     }
@@ -102,11 +105,16 @@ class CodeService {
   }
 
   async selGroupCodeInDetailCodeList(academyId: number, searchGrpCdList: string[]): Promise<IResponse> {
+    let whereObj: any = { academyId }
+    if (searchGrpCdList) {
+      whereObj.grpCd = searchGrpCdList
+    }
+
     const grpCdList = await CdGrp.findAll({
       attributes: ['grpId', 'grpCd', 'grpCdName', 'status'],
       where: { academyId, grpCd: searchGrpCdList },
       include: [{
-        attributes: ['GRP_CD', 'DTL_CD', 'DTL_CD_NAME', 'VAL1', 'VAL2', 'VAL3', 'DTL_ORDER', 'STATUS'],
+        attributes: ['dtlId', 'grpId', 'grpCd', 'dtlCd', 'dtlCdName', 'val1', 'val2', 'val3', 'dtlOrder', 'status'],
         model: CdDtl,
         where: { academyId, grpCd: searchGrpCdList },
         required: true
