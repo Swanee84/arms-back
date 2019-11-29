@@ -102,31 +102,28 @@ export default new AuthService();
 
 class MenuInfo {
   static readonly branchDirector = [
-    { icon: 'phone_callback', text: '지점 관리', toRoute: '/branch' },
+    { text: '지점 관리', toRoute: '/branch' },
   ]
   
   static readonly academyDirector = [
-    { icon: 'phone_callback', text: '학원 관리', toRoute: '/academy' },
+    { text: '학원 관리', toRoute: '/academy' },
   ]
 
   static readonly adminDirector = [
-    { icon: 'phone_callback', text: '코드 관리', toRoute: '/code' },
+    { text: '코드 관리', toRoute: '/code' },
   ]
 
   static readonly commonDriector = [
+    { text: '사용자 관리', toRoute: '/user' },
+    // {
+    //   text: '사용자 관리',
+    //   model: false,
+    //   children: [
+    //     { text: '수강생 관리', toRoute: '/student' },
+    //     { text: '강사 관리', toRoute: '/teacher' },
+    //   ],
+    // },
     {
-      icon: 'assignment_turned_in',
-      'icon-alt': 'assignment_turned_in',
-      text: '사용자 관리',
-      model: false,
-      children: [
-        { icon: 'person', text: '수강생 관리', toRoute: '/user' },
-        { icon: 'face', text: '강사 관리', toRoute: '/teacher' },
-      ],
-    },
-    {
-      icon: 'assignment_turned_in',
-      'icon-alt': 'assignment_turned_in',
       text: '수업 관리',
       model: false,
       children: [
@@ -139,15 +136,15 @@ class MenuInfo {
   ]
 
   static readonly teacher = [
-    { icon: 'phone_callback', text: '지난 수업 이력', toRoute: '/lesson_history' },
-    { icon: 'phone_callback', text: '수업 조회', toRoute: '/lesson_teacher' },
-    { icon: 'phone_callback', text: '내 정보 관리', toRoute: '/myinfo' },
+    { text: '지난 수업 이력', toRoute: '/lesson_history' },
+    { text: '수업 조회', toRoute: '/lesson_teacher' },
+    { text: '내 정보 관리', toRoute: '/myinfo' },
   ]
 
   static readonly student = [
-    { icon: 'phone_callback', text: '지난 수업 이력', toRoute: '/lesson_history' },
-    { icon: 'phone_callback', text: '수업 조회', toRoute: '/lesson' },
-    { icon: 'phone_callback', text: '내 정보 관리', toRoute: '/myinfo' },
+    { text: '지난 수업 이력', toRoute: '/lesson_history' },
+    { text: '수업 조회', toRoute: '/lesson' },
+    { text: '내 정보 관리', toRoute: '/myinfo' },
   ]
 
   public static getMenuArray(userRole: string): any {

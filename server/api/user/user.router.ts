@@ -3,10 +3,8 @@ import userController from './user.controller'
 import jwtauth from '../../common/jwtauth'
 
 export default express.Router()
-  .post('/selStudentList', jwtauth)
-  .post('/selStudentList', userController.selStudentList)
-  .post('/selTeacherList', jwtauth)
-  .post('/selTeacherList', userController.selTeacherList)
+  .post('/selUserList', jwtauth)
+  .post('/selUserList', userController.selUserList)
   .post('/updUser', jwtauth)
   .post('/updUser', userController.updUser)
   .post('/delUser', jwtauth)

@@ -5,12 +5,26 @@ import { Branch } from '../../models/Branch';
 import { User, UserBranch } from '../../models/User';
 import { Course, CourseHoldingHistory } from '../../models/Course';
 import { LessonRecord, Lesson, LessonTeacher } from '../../models/Lesson';
+import { Op } from 'sequelize';
 
 class UserService {
-  async selUserList(academyId: number, branchId?: number, role?: string): Promise<IResponse> {
+  async selUserList(academyId: number, branchId?: number, role?: string, email?: string, name?: string, phoneNo?: string): Promise<IResponse> {
     let whereObj: any = { academyId };
     if (branchId) {
       whereObj.branchId = branchId;
+    }
+    let userWhereObj: any = {};
+    if (role) {
+      userWhereObj.role = role;
+    }
+    if (email) {
+      userWhereObj.email = {[Op.like]: '%' + email + '%'};
+    }
+    if (name) {
+      userWhereObj.name = {[Op.like]: '%' + name + '%'};
+    }
+    if (phoneNo) {
+      userWhereObj.phoneNo = {[Op.like]: '%' + phoneNo + '%'};
     }
     const userList = await UserBranch.findAll({
       attributes: [],
@@ -18,6 +32,7 @@ class UserService {
       include: [{
         attributes: ['userId', 'email', 'name', 'phoneNo', 'birthday', 'role', 'status', 'regDt'],
         model: User,
+        where: userWhereObj,
         required: true,
       }, {
         attributes: ['academyId', 'name', 'address', 'status'],

@@ -54,6 +54,7 @@ class CodeService {
     const dtlCdList = await CdDtl.findAll({
       attributes: ['dtlId', 'grpId', 'grpCd', 'dtlCd', 'dtlCdName', 'val1', 'val2', 'val3', 'dtlOrder', 'status'],
       where: whereObj,
+      order: [['dtlOrder', 'ASC']],
     }).catch(Constant.returnDbErrorResponse);
     const response: IResponse = {
       result: true,
@@ -116,9 +117,11 @@ class CodeService {
       include: [{
         attributes: ['dtlId', 'grpId', 'grpCd', 'dtlCd', 'dtlCdName', 'val1', 'val2', 'val3', 'dtlOrder', 'status'],
         model: CdDtl,
+        as: 'cdDtlList',
         where: { academyId, grpCd: searchGrpCdList },
         required: true
-      }]
+      }],
+      order: [['cdDtlList', 'dtlOrder', 'ASC']],
     }).catch(Constant.returnDbErrorResponse);
     const response: IResponse = {
       result: true,
