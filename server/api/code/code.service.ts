@@ -100,7 +100,7 @@ class CodeService {
 
   async updCodeOrdering(cdDtlList: CdDtl[]): Promise<IResponse> {
     for (const cdDtl of cdDtlList) {
-      await CdDtl.update({ dtlOrder: cdDtl.dtlOrder }, { where: { dtlId: cdDtl.dtlId }})
+      await CdDtl.update({ dtlOrder: cdDtl.dtlOrder }, { where: { dtlId: cdDtl.dtlId }}).catch(Constant.returnDbErrorResponse);
     }
     return { result: true };;
   }
@@ -113,18 +113,18 @@ class CodeService {
 
     const grpCdList = await CdGrp.findAll({
       attributes: ['grpId', 'grpCd', 'grpCdName', 'status'],
-      where: { academyId, grpCd: searchGrpCdList },
+      where: whereObj,
       include: [{
         attributes: ['dtlId', 'grpId', 'grpCd', 'dtlCd', 'dtlCdName', 'val1', 'val2', 'val3', 'dtlOrder', 'status'],
         model: CdDtl,
         as: 'cdDtlList',
-        where: { academyId, grpCd: searchGrpCdList },
+        where: whereObj,
         required: true
       }],
       order: [['cdDtlList', 'dtlOrder', 'ASC']],
     }).catch(Constant.returnDbErrorResponse);
     const response: IResponse = {
-      result: true,
+      result: grpCdList !== true,
       model: grpCdList,
     };
     return response;

@@ -1,9 +1,10 @@
 import { hashSync } from 'bcryptjs'
 import UserService from './user.service';
 import { Request, Response } from 'express';
-import { User } from '../../models/User';
+import { User, UserBranch } from '../../models/User';
 import { IResponse } from '../../models/IResponse';
 import { Constant, RoleConst } from '../../config/Constant';
+import { Branch } from '../../models/Branch';
 
 class UserController {
   async selUserList(req: Request, res: Response): Promise<Response> {
@@ -20,16 +21,20 @@ class UserController {
   }
 
   async selUserDetail(req: Request, res: Response): Promise<Response> {
-    const userId = req.body.userId;
+    const { role, userId } = req.body;
+    if (!role) {
+      return res.json({ result: false, status: 400, code: 'role', message: 'Empty Parameter' });
+    }
     if (!userId) {
       return res.json({ result: false, status: 400, code: 'userId', message: 'Empty Parameter' });
     }
-    const response: IResponse = await UserService.selUserDetail(userId);
+    const response: IResponse = await UserService.selUserDetail(role, userId);
     return res.json(response);
   }
 
   async insUser(req: Request, res: Response): Promise<Response> {
     const user: User = req.body.user;
+    const branch:  UserBranch = req.body.branch;
     let password = user.password;
     if (!password) {
       return res.json({ result: false, status: 400, code: 'password', message: 'Empty Parameter' });
@@ -45,7 +50,16 @@ class UserController {
     if (!user.role) {
       return res.json({ result: false, status: 400, code: 'role', message: 'Empty Parameter' });
     }
-    const response: IResponse = await UserService.insUser(user);
+    if (!branch.academyId) {
+      return res.json({ result: false, status: 400, code: 'branch.academyId', message: 'Empty Parameter' });
+    }
+    if (!branch.branchId) {
+      return res.json({ result: false, status: 400, code: 'branch.branchId', message: 'Empty Parameter' });
+    }
+    user.status = Constant.USER_NORMAL;
+    user.regId = req.decodedUser.userId;
+    
+    const response: IResponse = await UserService.insUser(user, branch);
     return res.json(response);
   }
 
@@ -58,6 +72,7 @@ class UserController {
     if (user.password) {
       user.password = hashSync(user.password, 8);
     }
+    user.modId = req.decodedUser.userId;
     const response: IResponse = await UserService.updUser(user);
     return res.json(response);
   }

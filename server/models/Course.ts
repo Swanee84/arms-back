@@ -1,4 +1,4 @@
-import { HasMany, Column, ForeignKey, Table, DataType, PrimaryKey, BelongsTo } from 'sequelize-typescript';
+import { HasMany, Column, ForeignKey, Table, AutoIncrement, PrimaryKey, BelongsTo } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Branch } from './Branch';
@@ -7,6 +7,7 @@ import { User } from './User';
 @Table({ modelName: 'COURSE', underscored: true, freezeTableName: true })
 export class Course extends BaseModel<Course> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   courseId!: number; // 지점 계정
 
@@ -47,6 +48,7 @@ export class Course extends BaseModel<Course> implements BaseInterface {
 @Table({ modelName: 'COURSE_HOLDING_HISTORY', underscored: true, freezeTableName: true })
 export class CourseHoldingHistory extends BaseModel<Course> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   chhId!: number; // 수강 홀딩 계정
 

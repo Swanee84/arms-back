@@ -53,7 +53,7 @@ class UserService {
     return response;
   }
 
-  async selUserDetail(userId: number): Promise<IResponse> {
+  async selUserDetail(serachRole: string, userId: number): Promise<IResponse> {
     const user = await User.findOne({
       attributes: ['userId', 'email', 'name', 'phoneNo', 'birthday', 'role', 'status', 'regDt', 'modDt'],
       where: { userId: userId },
@@ -97,38 +97,66 @@ class UserService {
       user.lessonTeacherList = lessonTeacherList;
       user.setDataValue('lessonTeacherList', lessonTeacherList);
     }
+    const nextUserId = await User.min('userId', { where: { role: serachRole, userId: { [Op.gt]: userId }}}) || -1
+    const prevUserId = await User.max('userId', { where: { role: serachRole, userId: { [Op.lt]: userId }}}) || -1
+    console.log(`nextUserId: [${nextUserId}], prevUserId: [${prevUserId}]`)
     const response: IResponse = {
       result: user !== null,
       model: user,
+      jsonData: {
+        nextUserId,
+        prevUserId
+      }
     }
     return response;
   }
 
-  async insUser(user: User): Promise<IResponse> {
-    const newUser = await User.create(user).catch(error => {
-        console.log("insertUser: \n" + error)
-    })
-    const response: IResponse = {
-      result: newUser !== null,
-      jsonData: newUser,
+  async insUser(user: User, userBranch: UserBranch): Promise<IResponse> {
+    const duplicateCount = await User.count({ where: { email: user.email }}).catch(Constant.returnDbErrorResponse);
+    if (duplicateCount === 0) {
+      const newUser = await User.create(user).catch(Constant.returnDbErrorResponse);
+      if (!newUser) {
+        return {
+          result: false,
+          message: 'Insert User ERROR',
+        }
+      }
+      userBranch.userId = newUser.userId;
+      userBranch.status = Constant.USER_BRANCH_NORMAL;
+      const newBranch = await UserBranch.create(userBranch).catch(Constant.returnDbErrorResponse);
+      if (!newBranch) {
+        return {
+          result: false,
+          message: 'Insert Branch ERROR',
+        }
+      }
+      const response: IResponse = {
+        result: true,
+        message: '등록 성공',
+      }
+      return response;
+    } else {
+      return {
+        result: false,
+        message: 'Duplicate Email',
+      }
     }
-    return response;
   }
 
   async updUser(user: User): Promise<IResponse> {
-    await User.update(user, { where: { userId: user.userId }}).catch(error => {
-        console.log("insertUser: \n" + error)
-    })
+    const userId = user.userId;
+    delete user.userId;
+    const result = await User.update(user, { where: { userId }}).catch(Constant.returnDbErrorResponse);
     const response: IResponse = {
-      result: true,
+      result: result !== null,
     }
     return response;
   }
 
   async delUser(userId: number): Promise<IResponse> {
-    await User.destroy({ where: { userId }})
+    const result = await User.destroy({ where: { userId }}).catch(Constant.returnDbErrorResponse);
     const response: IResponse = {
-      result: true,
+      result: result !== null,
     }
     return response;
   }

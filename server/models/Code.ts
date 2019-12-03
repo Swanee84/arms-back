@@ -1,4 +1,4 @@
-import { ForeignKey, Column, HasMany, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import { ForeignKey, Column, HasMany, Table, AutoIncrement, PrimaryKey } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Academy } from './Academy';
@@ -6,6 +6,7 @@ import { Academy } from './Academy';
 @Table({ modelName: 'CD_GRP', underscored: true, freezeTableName: true })
 export class CdGrp extends BaseModel<CdGrp> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   grpId!: number; // 그룹 코드 계정
 
@@ -28,6 +29,7 @@ export class CdGrp extends BaseModel<CdGrp> implements BaseInterface {
 @Table({ modelName: 'CD_DTL', underscored: true, freezeTableName: true })
 export class CdDtl extends BaseModel<CdDtl> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   dtlId!: number; // 상세 코드 계정
 

@@ -1,4 +1,4 @@
-import { ForeignKey, Column, BelongsTo, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import { ForeignKey, Column, BelongsTo, Table, AutoIncrement, PrimaryKey } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Academy } from './Academy';
@@ -7,6 +7,7 @@ import { User } from './User';
 @Table({ modelName: 'BRANCH', underscored: true, freezeTableName: true })
 export class Branch extends BaseModel<Branch> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   branchId!: number; // 지점 계정
 

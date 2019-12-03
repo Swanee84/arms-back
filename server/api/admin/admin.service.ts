@@ -5,10 +5,6 @@ import { User } from '../../models/User';
 import { Academy } from '../../models/Academy';
 import { Branch } from '../../models/Branch';
 
-const userRepository = sequelize.getRepository(User);
-const academyRepository = sequelize.getRepository(Academy);
-const branchRepository = sequelize.getRepository(Branch);
-
 export class AdminService {
   async selAcademyList(): Promise<IResponse> {
     const response: IResponse = {
@@ -42,10 +38,20 @@ export class AdminService {
     return response;
   }
 
-  async selBranchList(): Promise<IResponse> {
+  async selBranchList(academyId: number): Promise<IResponse> {
+    const branchList = await Branch.findAll({
+      attributes: ['branchId', 'academyId', 'name', 'status'],
+      where: { academyId },
+      include: [{
+        attributes: ['userId', 'name'],
+        model: User,
+        required: true,
+      }],
+    }).catch(Constant.returnDbErrorResponse);
+
     const response: IResponse = {
       result: true,
-      message: '',
+      model: branchList,
     }
     return response;
   }

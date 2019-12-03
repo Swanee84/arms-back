@@ -1,4 +1,4 @@
-import { ForeignKey, Column, BelongsTo, Table, HasMany, PrimaryKey } from 'sequelize-typescript';
+import { ForeignKey, Column, BelongsTo, Table, HasMany, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Branch } from './Branch';
@@ -7,6 +7,7 @@ import { User } from './User';
 @Table({ modelName: 'LESSON', underscored: true, freezeTableName: true })
 export class Lesson extends BaseModel<Lesson> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   lessonId!: number; // 수업 계정
 
@@ -43,6 +44,7 @@ export class Lesson extends BaseModel<Lesson> implements BaseInterface {
 @Table({ modelName: 'LESSON_MODIFY_REQUEST', underscored: true, freezeTableName: true })
 export class LessonModifyRequest extends BaseModel<Lesson> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   lmrId!: number; // 수업 변경 요청 계정
 
@@ -78,6 +80,7 @@ export class LessonModifyRequest extends BaseModel<Lesson> implements BaseInterf
 @Table({ modelName: 'LESSON_PICTURE', underscored: true, freezeTableName: true })
 export class LessonPicture extends BaseModel<LessonPicture> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   lpId!: number; // 수업 그림 계정
 
@@ -110,6 +113,7 @@ export class LessonPicture extends BaseModel<LessonPicture> implements BaseInter
 @Table({ modelName: 'LESSON_RECORD', underscored: true, freezeTableName: true })
 export class LessonRecord extends BaseModel<LessonRecord> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   lhId!: number; // 수업 그림 계정
 
@@ -142,6 +146,7 @@ export class LessonRecord extends BaseModel<LessonRecord> implements BaseInterfa
 @Table({ modelName: 'LESSON_SCHEMA', underscored: true, freezeTableName: true })
 export class LessonSchema extends BaseModel<LessonSchema> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   schemaId!: number; // 수업 스키마 계정
 
@@ -169,6 +174,7 @@ export class LessonSchema extends BaseModel<LessonSchema> implements BaseInterfa
 @Table({ modelName: 'LESSON_SCHEMA_TEACHER', underscored: true, freezeTableName: true })
 export class LessonSchemaTeacher extends BaseModel<LessonSchemaTeacher> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   lstId!: number; // 지점 계정
 
@@ -191,6 +197,7 @@ export class LessonSchemaTeacher extends BaseModel<LessonSchemaTeacher> implemen
 @Table({ modelName: 'LESSON_TEACHER', underscored: true, freezeTableName: true })
 export class LessonTeacher extends BaseModel<LessonTeacher> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   ltId!: number; // 수업 참여 선생님 계정
 

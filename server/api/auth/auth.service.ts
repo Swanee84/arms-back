@@ -102,27 +102,46 @@ export default new AuthService();
 
 class MenuInfo {
   static readonly branchDirector = [
+    {
+      text: '사용자 관리',
+      model: false,
+      children: [
+        { text: '수강생 관리', toRoute: '/user/student' },
+        { text: '강사 관리', toRoute: '/user/teacher' },
+      ],
+    },
     { text: '지점 관리', toRoute: '/branch' },
   ]
   
   static readonly academyDirector = [
+    {
+      text: '사용자 관리',
+      model: false,
+      children: [
+        { text: '수강생 관리', toRoute: '/user/student' },
+        { text: '강사 관리', toRoute: '/user/teacher' },
+        { text: '지점원장 관리', toRoute: '/user/director' },
+      ],
+    },
     { text: '학원 관리', toRoute: '/academy' },
   ]
 
   static readonly adminDirector = [
+    {
+      text: '사용자 관리',
+      model: false,
+      children: [
+        { text: '수강생 관리', toRoute: '/user/student' },
+        { text: '강사 관리', toRoute: '/user/teacher' },
+        { text: '지점 원장 관리', toRoute: '/user/director' },
+        { text: '학원 원장 관리', toRoute: '/user/president' },
+      ],
+    },
     { text: '코드 관리', toRoute: '/code' },
   ]
 
   static readonly commonDriector = [
-    { text: '사용자 관리', toRoute: '/user' },
-    // {
-    //   text: '사용자 관리',
-    //   model: false,
-    //   children: [
-    //     { text: '수강생 관리', toRoute: '/student' },
-    //     { text: '강사 관리', toRoute: '/teacher' },
-    //   ],
-    // },
+    // { text: '사용자 관리', toRoute: '/user' },
     {
       text: '수업 관리',
       model: false,
@@ -149,16 +168,15 @@ class MenuInfo {
 
   public static getMenuArray(userRole: string): any {
     let menuArray = [];
-    if (userRole === RoleConst.ADMIN || userRole === RoleConst.ACADEMY) {
-      menuArray = menuArray.concat(MenuInfo.branchDirector);
+    if (userRole === RoleConst.ADMIN || userRole === RoleConst.ACADEMY || userRole === RoleConst.BRANCH) {
       menuArray = menuArray.concat(MenuInfo.commonDriector);
-      menuArray = menuArray.concat(MenuInfo.academyDirector);
       if (userRole === RoleConst.ADMIN) {
         menuArray = menuArray.concat(MenuInfo.adminDirector);
+      } else if (userRole === RoleConst.ACADEMY) {
+        menuArray = menuArray.concat(MenuInfo.academyDirector);
+      } else if (userRole === RoleConst.BRANCH) {
+        menuArray = menuArray.concat(MenuInfo.branchDirector);
       }
-    } else if (userRole === RoleConst.BRANCH) {
-      menuArray = menuArray.concat(MenuInfo.branchDirector);
-      menuArray = menuArray.concat(MenuInfo.commonDriector);
     } else if (userRole === RoleConst.TEACHER) {
       menuArray = menuArray.concat(MenuInfo.teacher);
     } else if (userRole === RoleConst.STUDENT) {

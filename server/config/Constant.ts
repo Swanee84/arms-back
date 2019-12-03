@@ -5,6 +5,9 @@ export class Constant {
   public static readonly CODE_NORMAL: string = 'CODE_001';
   public static readonly CODE_DELETE: string = 'CODE_002';
 
+  public static readonly USER_BRANCH_NORMAL: string = 'UB_001';
+  public static readonly USER_BRANCH_DELETE: string = 'UB_002';
+
   public static readonly HEADER_KEY: string = 'authorization';
 
   public static returnDbErrorResponse(error: any): any {
@@ -16,8 +19,8 @@ export class Constant {
 
 export class RoleConst {
   public static readonly ADMIN: string = 'ADMIN';
-  public static readonly ACADEMY: string = 'ACADEMY';
-  public static readonly BRANCH: string = 'BRANCH';
+  public static readonly ACADEMY: string = 'PRESIDENT';
+  public static readonly BRANCH: string = 'DIRECTOR';
   public static readonly TEACHER: string = 'TEACHER';
   public static readonly STUDENT: string = 'STUDENT';
 }

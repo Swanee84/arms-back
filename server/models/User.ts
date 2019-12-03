@@ -1,4 +1,4 @@
-import { BelongsTo, Column, Scopes, Table, ForeignKey, PrimaryKey, HasOne, HasMany} from 'sequelize-typescript';
+import { BelongsTo, Column, Scopes, Table, ForeignKey, PrimaryKey, HasOne, HasMany, AutoIncrement} from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Academy } from './Academy';
@@ -9,6 +9,7 @@ import { LessonRecord, LessonTeacher } from './Lesson';
 @Table({ modelName: 'USER', underscored: true, freezeTableName: true })
 export class User extends BaseModel<User> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   userId!: number; // 사용자 계정
 
@@ -42,6 +43,7 @@ export class User extends BaseModel<User> implements BaseInterface {
 @Table({ modelName: 'USER_BRANCH', underscored: true, freezeTableName: true })
 export class UserBranch extends BaseModel<UserBranch> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   ubId!: number; // 사용자 지점 계정
 

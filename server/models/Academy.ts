@@ -1,4 +1,4 @@
-import { HasMany, Column, Scopes, Table, DataType, PrimaryKey } from 'sequelize-typescript';
+import { HasMany, Column, Scopes, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
 import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Branch } from './Branch';
@@ -6,6 +6,7 @@ import { Branch } from './Branch';
 @Table({ modelName: 'ACADEMY', underscored: true, freezeTableName: true })
 export class Academy extends BaseModel<Academy> implements BaseInterface {
   @PrimaryKey
+  @AutoIncrement
   @Column
   academyId!: number; // 학원 계정
 
