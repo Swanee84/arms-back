@@ -3,6 +3,7 @@ import { BaseModel } from './BaseModel';
 import { BaseInterface } from './BaseInterface';
 import { Branch } from './Branch';
 import { User } from './User';
+import { Course } from './Course';
 
 @Table({ modelName: 'LESSON', underscored: true, freezeTableName: true })
 export class Lesson extends BaseModel<Lesson> implements BaseInterface {
@@ -120,6 +121,10 @@ export class LessonRecord extends BaseModel<LessonRecord> implements BaseInterfa
   @ForeignKey(() => Branch)
   @Column
   branchId!: number; // 지점 계정
+
+  @ForeignKey(() => Course)
+  @Column
+  courseId!: number; // 수강 계정
 
   @ForeignKey(() => Lesson)
   @Column

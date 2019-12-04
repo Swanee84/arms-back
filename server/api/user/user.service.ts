@@ -63,18 +63,18 @@ class UserService {
       const courseList = await Course.findAll({
         attributes: ['startDate', 'endDate', 'courseAmount', 'courseType', 'discountAmount', 'maxHoldingCount', 'useHoldingCount', 'status', 'regDt', 'modDt'],
         where: { userId: userId },
-        include: [{
-          attributes: ['startDate', 'endDate', 'status', 'regDt', 'modDt'],
-          model: CourseHoldingHistory,
-          required: true,
-          where: { userId: userId },
-        }]
+        // include: [{
+        //   attributes: ['startDate', 'endDate', 'status', 'regDt', 'modDt'],
+        //   model: CourseHoldingHistory,
+        //   required: true,
+        //   where: { userId: userId },
+        // }]
       })
       user.courseList = courseList;
       user.setDataValue('courseList', courseList);
 
       const lessonRecordList = await LessonRecord.findAll({
-        attributes: ['lessonId', 'lessonType', 'status'],
+        attributes: ['courseId', 'lessonId', 'lessonType', 'status'],
         where: { userId: userId },
         include: [{
           attributes: ['lessonDate', 'lessonStartTime', 'lessonEndTime', 'place', 'status', 'regDt', 'modDt'],
