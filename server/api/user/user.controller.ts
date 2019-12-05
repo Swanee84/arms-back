@@ -13,7 +13,7 @@ class UserController {
     if (!academyId) {
       return res.json({ result: false, status: 400, code: 'academyId', message: 'Empty Parameter' });
     }
-    if (!branchId && user.role != RoleConst.ACADEMY && user.role != RoleConst.ADMIN) {
+    if (!branchId && user.role != RoleConst.PRESIDENT && user.role != RoleConst.ADMIN) {
       return res.json({ result: false, status: 403, code: 'role', message: '전체 조회 권한 없음' });
     }
     const response: IResponse = await UserService.selUserList(academyId, branchId, role, email, name, phoneNo);

@@ -116,7 +116,7 @@ export class LessonRecord extends BaseModel<LessonRecord> implements BaseInterfa
   @PrimaryKey
   @AutoIncrement
   @Column
-  lhId!: number; // 수업 그림 계정
+  lrId!: number; // 수업 그림 계정
 
   @ForeignKey(() => Branch)
   @Column

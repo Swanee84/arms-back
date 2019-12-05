@@ -3,7 +3,7 @@ import adminController from './admin.controller'
 import jwtauth from '../../common/jwtauth'
 import { RoleConst } from '../../config/Constant';
 
-const grantedRole = [RoleConst.ADMIN, RoleConst.ACADEMY];
+const grantedRole = [RoleConst.ADMIN, RoleConst.PRESIDENT];
 
 export default express.Router()
   .post('/selBranchList', jwtauth(grantedRole))

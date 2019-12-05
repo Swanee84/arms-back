@@ -44,10 +44,10 @@ class UserService {
         required: true,
       }
     ]
-    })
+    }).catch(Constant.returnDbErrorResponse);
 
     const response: IResponse = {
-      result: true,
+      result: userList !== null,
       model: userList,
     }
     return response;
@@ -84,7 +84,7 @@ class UserService {
       })
       user.lessonRecordList = lessonRecordList;
       user.setDataValue('lessonRecordList', lessonRecordList);
-    } else if (role === RoleConst.TEACHER || role === RoleConst.BRANCH || role === RoleConst.ACADEMY) { // 선생님이면
+    } else if (role === RoleConst.TEACHER || role === RoleConst.DIRECTOR || role === RoleConst.PRESIDENT) { // 선생님이면
       const lessonTeacherList = await LessonTeacher.findAll({
         attributes: ['lessonId', 'branchId', 'status'],
         where: { userId: userId },

@@ -16,17 +16,17 @@ class AuthService {
       where: { email, status: Constant.USER_NORMAL },
     }).catch(Constant.returnDbErrorResponse);
 
-    let message: string = ''
-    let result: boolean = false
+    let message: string = '';
+    let result: boolean = false;
     if (user === null) {
-      message = '없는 사용자입니다.'
+      message = '없는 사용자입니다.';
     } else {
       result = compareSync(password, user.password);
       if (result) {
-        message = '성공'
-        user.password = null
+        message = '성공';
+        delete user.password;
       } else {
-        message = '비밀번호 틀림'
+        message = '비밀번호 틀림';
       }
     }
     const menuArray = MenuInfo.getMenuArray(user.role);
@@ -36,7 +36,7 @@ class AuthService {
       message,
       model: result ? user : null,
       jsonData: menuArray
-    }
+    };
     return response;
   }
 
@@ -168,13 +168,13 @@ class MenuInfo {
 
   public static getMenuArray(userRole: string): any {
     let menuArray = [];
-    if (userRole === RoleConst.ADMIN || userRole === RoleConst.ACADEMY || userRole === RoleConst.BRANCH) {
+    if (userRole === RoleConst.ADMIN || userRole === RoleConst.PRESIDENT || userRole === RoleConst.DIRECTOR) {
       menuArray = menuArray.concat(MenuInfo.commonDriector);
       if (userRole === RoleConst.ADMIN) {
         menuArray = menuArray.concat(MenuInfo.adminDirector);
-      } else if (userRole === RoleConst.ACADEMY) {
+      } else if (userRole === RoleConst.PRESIDENT) {
         menuArray = menuArray.concat(MenuInfo.academyDirector);
-      } else if (userRole === RoleConst.BRANCH) {
+      } else if (userRole === RoleConst.DIRECTOR) {
         menuArray = menuArray.concat(MenuInfo.branchDirector);
       }
     } else if (userRole === RoleConst.TEACHER) {

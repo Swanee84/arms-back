@@ -4,6 +4,7 @@ import { BaseInterface } from './BaseInterface';
 import { Branch } from './Branch';
 import { User } from './User';
 import { LessonRecord } from './Lesson';
+import { Academy } from './Academy';
 
 @Table({ modelName: 'COURSE', underscored: true, freezeTableName: true })
 export class Course extends BaseModel<Course> implements BaseInterface {
@@ -11,6 +12,10 @@ export class Course extends BaseModel<Course> implements BaseInterface {
   @AutoIncrement
   @Column
   courseId!: number; // 지점 계정
+
+  @ForeignKey(() => Academy)
+  @Column
+  academyId!: number; // 학원 계정
 
   @ForeignKey(() => Branch)
   @Column

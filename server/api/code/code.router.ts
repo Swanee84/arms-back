@@ -3,7 +3,7 @@ import codeController from './code.controller'
 import jwtauth from '../../common/jwtauth'
 import { RoleConst } from '../../config/Constant';
 
-const grantedRole = [RoleConst.ADMIN, RoleConst.ACADEMY, RoleConst.BRANCH];
+const grantedRole = [RoleConst.ADMIN, RoleConst.PRESIDENT, RoleConst.DIRECTOR];
 
 export default express.Router()
   .post('/selGroupCodeList', jwtauth())
@@ -24,7 +24,7 @@ export default express.Router()
   .post('/delDetailCode', codeController.delDetailCode)
   .post('/updCodeOrdering', jwtauth(grantedRole))
   .post('/updCodeOrdering', codeController.updCodeOrdering)
-  .post('/selAllDetailCodeList', jwtauth())
+  // .post('/selAllDetailCodeList', jwtauth())
   .post('/selAllDetailCodeList', codeController.selAllDetailCodeList)
-  .post('/selGroupCodeInDetailCodeList', jwtauth())
+  // .post('/selGroupCodeInDetailCodeList', jwtauth())
   .post('/selGroupCodeInDetailCodeList', codeController.selGroupCodeInDetailCodeList)

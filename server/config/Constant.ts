@@ -19,8 +19,8 @@ export class Constant {
 
 export class RoleConst {
   public static readonly ADMIN: string = 'ADMIN';
-  public static readonly ACADEMY: string = 'PRESIDENT';
-  public static readonly BRANCH: string = 'DIRECTOR';
+  public static readonly PRESIDENT: string = 'PRESIDENT';
+  public static readonly DIRECTOR: string = 'DIRECTOR';
   public static readonly TEACHER: string = 'TEACHER';
   public static readonly STUDENT: string = 'STUDENT';
 }

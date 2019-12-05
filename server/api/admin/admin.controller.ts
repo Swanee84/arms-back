@@ -28,7 +28,7 @@ export class AdminController {
     if (!academyId) {
       return res.json({ result: false, status: 400, code: 'academyId', message: 'Empty Parameter' });
     }
-    if (user.role != RoleConst.ACADEMY && user.role != RoleConst.ADMIN) {
+    if (user.role != RoleConst.PRESIDENT && user.role != RoleConst.ADMIN) {
       return res.json({ result: false, status: 403, code: 'role', message: '조회 권한 없음' });
     }
     const response: IResponse = await AdminService.selBranchList(academyId);
