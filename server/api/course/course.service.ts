@@ -2,7 +2,7 @@ import { sequelize } from '../../common/sequelize';
 import { IResponse } from '../../models/IResponse';
 import { Constant } from '../../config/Constant';
 import { User } from '../../models/User';
-import { Course } from '../../models/Course';
+import { Course, CourseHoldingHistory } from '../../models/Course';
 import { LessonRecord, Lesson } from '../../models/Lesson';
 
 export class CourseService {
@@ -26,11 +26,17 @@ export class CourseService {
     const courseList = await Course.findAll({
       attributes: ['startDate', 'endDate', 'courseAmount', 'courseType', 'discountAmount', 'maxHoldingCount', 'useHoldingCount', 'status', 'regDt', 'modDt'],
       where: { userId },
+      include: [{
+        attributes: ['startDate', 'endDate', 'status', 'regDt', 'modDt'],
+        model: CourseHoldingHistory,
+        required: false,
+        where: { userId },
+      }]
     }).catch(Constant.returnDbErrorResponse);
 
     const lessonRecordList = await LessonRecord.findAll({
       attributes: ['courseId', 'lessonId', 'lessonType', 'status'],
-      where: { userId: userId },
+      where: { userId },
       include: [{
         attributes: ['lessonDate', 'lessonStartTime', 'lessonEndTime', 'place', 'status', 'regDt', 'modDt'],
         model: Lesson,
@@ -39,7 +45,7 @@ export class CourseService {
     }).catch(Constant.returnDbErrorResponse);
 
     for (const course of courseList) {
-      const findArray: LessonRecord[] = lessonRecordList.filter(item => item.courseId === course.courseId);
+      const findArray: LessonRecord[] = lessonRecordList.filter((item: LessonRecord) => item.courseId === course.courseId);
       course.lessonRecordList = findArray;
     }
 

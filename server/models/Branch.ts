@@ -6,32 +6,31 @@ import { User } from './User';
 
 @Table({ modelName: 'BRANCH', underscored: true, freezeTableName: true })
 export class Branch extends BaseModel<Branch> implements BaseInterface {
-  @PrimaryKey
-  @AutoIncrement
-  @Column
-  branchId!: number; // 지점 계정
+	@PrimaryKey
+	@AutoIncrement
+	@Column
+	branchId!: number; // 지점 계정
 
-  @ForeignKey(() => Academy)
-  @Column
-  academyId!: number; // 학원 계정
+	@ForeignKey(() => Academy)
+	@Column
+	academyId!: number; // 학원 계정
 
-  @Column
-  name!: string; // 이름
-  
-  @ForeignKey(() => User)
-  @Column
-  userId!: number; // 지점 원장 사용자 계정
+	@Column
+	name!: string; // 이름
 
-  @Column
-  incorporation?: Date; // 설립일
+	@ForeignKey(() => User)
+	@Column
+	userId!: number; // 지점 원장 사용자 계정
 
-  @Column
-  address?: string; // 주소
+	@Column
+	incorporation?: Date; // 설립일
 
-  @BelongsTo(() => Academy)
-  academy: Academy;
+	@Column
+	address?: string; // 주소
 
-  @BelongsTo(() => User)
-  user: User;
-  
+	@BelongsTo(() => Academy)
+	academy: Academy;
+
+	@BelongsTo(() => User)
+	user: User;
 }

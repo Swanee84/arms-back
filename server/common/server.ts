@@ -11,24 +11,26 @@ import errorHandler from '../api/middlewares/error.handler';
 const app = express();
 
 export default class ExpressServer {
-  constructor() {
-    const root = path.normalize(__dirname + '/../..');
-    app.set('appPath', root + 'client');
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(express.static(`${root}/public`));
-    app.use(cors());
-  }
+	constructor() {
+		const root = path.normalize(__dirname + '/../..');
+		app.set('appPath', root + 'client');
+		app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({ extended: true }));
+		app.use(express.static(`${root}/public`));
+		app.use(cors());
+	}
 
-  router(routes: (app: Application) => void): ExpressServer {
-    routes(app);
-    app.use(errorHandler);
-    return this;
-  }
+	router(routes: (app: Application) => void): ExpressServer {
+		routes(app);
+		app.use(errorHandler);
+		return this;
+	}
 
-  listen(p: string | number = process.env.PORT): Application {
-    const welcome = port => () => console.info(`up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname() } on port: ${port}}`);
-    http.createServer(app).listen(p, welcome(p));
-    return app;
-  }
+	listen(p: string | number = process.env.PORT): Application {
+		const welcome = (port: string | number) => (): void => {
+			console.info(`up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${port}}`);
+		};
+		http.createServer(app).listen(p, welcome(p));
+		return app;
+	}
 }

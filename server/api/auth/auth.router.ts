@@ -1,6 +1,7 @@
 import express from 'express';
-import authController from './auth.controller'
+import authController from './auth.controller';
 
-export default express.Router()
-    .post('/signIn', authController.signIn)
-    .get('/tokenRefresh', authController.tokenRefresh)
+export default express
+	.Router()
+	.post('/signIn', authController.signIn)
+	.get('/tokenRefresh', authController.tokenRefresh);
